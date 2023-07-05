@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1"></script>
+  <script>
+    setTimeout(function() {
+      var flashMessage = document.querySelector('.flash-message');
+      if (flashMessage) {
+        flashMessage.style.display = 'none';
+      }
+    }, 2000);
+  </script>
+</head>
+<body>
+  <div class="navbar">
+    <h1 class="navbar-title">Goal</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              <li class="flash-message flash-error">{{ message }}</li>
+            {% elif category == 'success' %}
+              <li class="flash-message flash-success">{{ message }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% include 'side_navbar.html' %}
+  </div>  
+  <div class="goal-container">
+    <h4>GOAL GRAPH</h4>
+    <canvas id="goal-graph" width="550" height="550"></canvas>
+  </div>
+
+    <div class="form-container">
+        <h1>Set Goal</h1>
+        <form action="/goal" method="POST">
+        <label for="goal">Goal:</label>
+        <input type="number" id="goal" name="goal" required>
+    
+        <input class="save-button" type="submit" value="Save">
+        </form>
+    </div>
+  
+
+  <script>
+    var current_balance = {{ current_balance | safe }};
+    var goal = {{ goal | safe }};
+    
+    var balancePieCtx = document.getElementById("goal-graph").getContext("2d");
+    var balancePieChart = new Chart(balancePieCtx, {
+      type: "pie",
+      data: {
+        labels: ["Reached", "Remain"],
+        datasets: [
+          {
+            data: [current_balance,goal-current_balance],
+            backgroundColor: ["rgba(75, 192, 192, 0.5)", "rgba(40, 167, 69, 0.5)"],
+            borderColor: ["rgb(75, 192, 192)", "rgba(35, 167, 69)"],
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+      }
+    });
+  </script>
+</body>
+</html>
