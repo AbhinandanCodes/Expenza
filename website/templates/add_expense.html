@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Meta tags -->
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+        <meta
+        name="viewport" content="width=device-width"/>
+
+        <!-- Favicon and title -->
+        <link rel="icon" href="{{ url_for('static', filename='logo/logo_login.jpg') }}">
+        <title>Add Expense - EXPENZA</title>
+
+        <!-- loader styles -->
+        <style>
+            #loader {
+                width: 10rem;
+                height: auto;
+
+            }
+
+            @keyframes spin {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .center {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                background-color: #2c72b0;
+            }
+        </style>
+
+        <!-- loader-script -->
+        <script>
+            document.onreadystatechange = function () {
+                if (document.readyState !== "complete") {
+                    document.querySelector("body").style.visibility = "hidden";
+                    document.querySelector("html").style.backgroundColor = "#2c72b0";
+                    document.querySelector("#loader").style.visibility = "visible";
+                } else {
+
+                    setTimeout(function () {
+                        document.querySelector("#loader").style.display = "none";
+                        document.querySelector("body").style.visibility = "visible";
+
+                    }, 100);
+
+                }
+            };
+        </script>
+
+        <!-- Halfmoon CSS -->
+        <link
+        href="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/css/halfmoon-variables.min.css" rel="stylesheet"/>
+
+        <!-- fontawsome -->
+        <link
+        rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+        <!-- google-fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+        href="https://fonts.googleapis.com/css2?family=Aclonica&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+        <!-- chartjs -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1"></script>
+
+        <!-- custom styles -->
+        <style>
+            * {
+                font-family: 'Aclonica', sans-serif;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            .navbar {
+                background-color: #2c72b0;
+            }
+            .navbar-brand {
+                color: white;
+            }
+            .navbar-content .btn {
+                background-color: transparent;
+                color: white;
+            }
+            .navbar-content .btn:hover {
+                background-color: #4594cb;
+            }
+            .sidebar {
+                background-color: #2c72b0;
+            }
+            .sidebar a,
+            i {
+                color: white;
+            }
+            .sidebar .sidebar-divider {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+            .content-wrapper {
+                background-image: linear-gradient(to right bottom, #ffffff, #e2e1ef, #c1c5e1, #9eaad2, #7691c4, #6192c8, #4594cb, #0095cc, #00afdc, #00c9e7, #2de2ee, #5ffbf1);
+
+            }
+            .sidebar-menu .active {
+                color: black;
+            }
+            
+            .flash-message {
+                position: sticky;
+                display: flex;
+                flex-direction: column;
+                
+                margin-bottom: 10px;
+                margin-left: auto;
+                margin-right: auto;
+                border-radius: 4px;
+                z-index: 10000000;
+                max-width: 20%;
+                
+                background-color: transparent !important;
+                overflow: hidden;
+            }
+
+            .flash-success {
+            background-color: #8bc34a !important;
+            color: #fff !important;
+
+            }
+
+            .flash-error {
+            background-color: #f44336 !important;
+            color: #fff !important;
+            }
+
+        </style>
+        <!-- flash messages -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var flashMessages = document.querySelectorAll('.flash-message');
+
+                setTimeout(function () {
+                    hideFlashMessage(0);
+                }, 2000);
+
+                function hideFlashMessage(index) {
+                    if (index >= flashMessages.length) {
+                        return;
+                    }
+
+                    flashMessages[index].style.display = 'none';
+
+                    setTimeout(function () {
+                        hideFlashMessage(index + 1);
+                    }, 1000);
+                }
+            });
+        </script>
+
+    </head>
+    <body
+        class="with-custom-webkit-scrollbars with-custom-css-scrollbars" data-dm-shortcut-enabled="true" data-sidebar-shortcut-enabled="true" data-set-preferred-mode-onload="true">
+        <!-- flash message logic
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            <li class=" flash-message flash-error">{{ message }}</li>
+                        {% elif category == 'success' %}
+                            <li class="flash-message flash-success">{{ message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %} -->
+        <!-- loader -->
+        <img src="{{ url_for('static', filename='logo/logo_login.jpg') }}" id="loader" class="center" alt="loader" srcset="">
+
+        
+
+        <!-- Page wrapper start -->
+            <div
+            class="page-wrapper with-navbar with-sidebar" data-sidebar-type="full-height overlayed-sm-and-down"> 
+            <!-- Sticky alerts (toasts), empty container -->
+            <div class="sticky-alerts"></div>
+
+            <!-- Navbar start -->
+            <nav class="navbar justify-content-between">
+
+                <div class="navbar-content">
+                    <button id="toggle-sidebar-btn" class="btn btn-action border-0 shadow-none" type="button" onclick="halfmoon.toggleSidebar()">
+                        <i class="fa fa-bars inverted-color-icon" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <a href="#" class="navbar-brand">
+                    Add Expense
+                </a>
+
+                <div class="navbar-content">
+                    <button class="btn btn-action mr-5 border-0 shadow-none" type="button" onclick="halfmoon.toggleDarkMode()">
+                        <i class="fa-solid fa-moon inverted-color-icon"></i>
+                        <span class="sr-only">Toggle dark mode</span>
+                    </button>
+                </div>
+
+            </nav>
+            <!-- Navbar end -->
+
+            <!-- Sidebar overlay -->
+            <div class="sidebar-overlay" onclick="halfmoon.toggleSidebar()"></div>
+
+            <!-- Sidebar start -->
+            <div class="sidebar">
+
+                <div class="sidebar-menu">
+
+                    <div class="sidebar-content text-center">
+                        <a href="#">
+                            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="logo" width="200" class="m-auto img-fluid rounded" id="sidebar-logo-img">
+                        </a>
+                    </div>
+
+                    <!-- Sidebar links (with icons) and titles -->
+                    <div class="sidebar-divider mt-10"></div>
+
+                    <a href="{{url_for('views.dashboard')}}" class="sidebar-link sidebar-link-with-icon mt-20">
+                        <span class="sidebar-icon">
+                            <i class="fa-solid fa-house"></i>
+                        </span>Dashboard
+                    </a>
+
+                    <a href="{{url_for('views.analytics')}}" class="sidebar-link sidebar-link-with-icon my-10">
+                        <span class="sidebar-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </span>Analytics
+                    </a>
+                    <a href="{{url_for('views.transaction')}}" class="sidebar-link sidebar-link-with-icon my-10">
+                        <span class="sidebar-icon">
+                            <i class="fa-solid fa-right-left"></i>
+                        </span>Transactions
+                    </a>
+                    <a href="{{url_for('views.add_expense')}}" class="sidebar-link sidebar-link-with-icon my-10 active">
+                        <span class="sidebar-icon">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </span>Add Expense
+                    </a>
+                    <a href="{{url_for('views.goal')}}" class="sidebar-link sidebar-link-with-icon my-10">
+                        <span class="sidebar-icon">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </span>Goals
+                    </a>
+                    <br/>
+                    <!-- <div class="sidebar-divider mt-10"></div> -->
+                    <a href="{{url_for('auth.logout')}}" class="sidebar-link sidebar-link-with-icon my-10 position-absolute bottom-0">
+                        <span class="sidebar-icon">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </span>Logout ({{ current_user.username}})
+                    </a>
+
+                </div>
+            </div>
+            <!-- Sidebar end -->
+
+            <!-- Dashboard body (Content wrapper) start -->
+            <div class="content-wrapper">
+                <div class="d-flex justify-content-center flex-column mt-20" id="cards-containter">
+                    <div class="card shadow rounded">
+                        <h1 class="card-title ml-20">Add New Expense
+                        </h1>
+                        <div class="sidebar-divider mt-10 ml-0"></div>
+                        <!-- Expense Form -->
+                        <div class="container-fluid p-20">
+                            <form
+                                action="{{url_for('views.adding_expense')}}" method="POST" class="">
+                                <!-- amount -->
+                                <div class="form-group">
+                                    <label for="amount" class="required">Amount (₹)</label>
+                                    <div class="input-group">
+
+                                        <input type="number" id="amount" name="amount" class="form-control" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">₹</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- expense type -->
+                                <div class="form-group">
+                                    <label for="credit" class="required">Expense type</label>
+                                    <div class="custom-radio">
+                                        <input type="radio" id="credit" name="amount_type" value="credit" required="required">
+                                        <label for="credit" class="text-success">Credit</label>
+                                    </div>
+                                    <div class="custom-radio">
+                                        <input type="radio" id="debit" name="amount_type" value="debit" required="required">
+                                        <label for="debit" class="text-danger">Debit</label>
+                                    </div>
+                                </div>
+                                <!-- description -->
+                                <div class="form-group">
+                                    <label for="description" class="required">Expense Description</label>
+                                    <textarea type="text" class="form-control" id="description" placeholder="Describe your expense" required="required" name="description"></textarea>
+                                </div>
+                                <!-- date -->
+                                <div class="form-group">
+                                    <label for="date" class="required">Date</label>
+                                    <input class="form-control"  type="date" id="date" name="date" required>
+                                </div>
+                                <br>
+                                <!-- submit -->
+                                <div class="input-group">
+                                    <input type="submit" class="btn btn-primary btn-block btn-lg" value="Add Expense">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- expense history -->
+                    <div class="card shadow rounded">
+                        <h2 class="card-title mb-5">Expense History</h2>
+                        <p class="text-muted mt-0 font-size-12">Last 5 transactions</p>
+                        <div class="sidebar-divider mt-10 ml-0"></div>
+                        <h6>Current Balance (₹): 
+                            <span class="text-primary font-weight-medium amount">{{ total_balance }}</span>
+                        </h6>
+                        <h6>Total Credit (₹): 
+                            <span class="text-success font-weight-medium amount" id="total-credit-count">0</span>
+                        </h6>
+                        <h6>
+                            Total Debit (₹):
+                            <span class="text-danger font-weight-mediumfont-weight-bold amount" id="total-debit-count">0</span>
+                        </h6>
+                        <div class="sidebar-divider mt-20 ml-0"></div>
+                        <div class="expense-filter d-flex flex-row my-10">
+                            <button class="btn btn-secondary" onclick="filterExpenses('debit')">Debit</button>
+                            <button class="btn btn-success ml-10" onclick="filterExpenses('credit')">Credit</button>
+                            <button class="btn btn-primary ml-10" onclick="filterExpenses('all')">
+                                All</button>
+                        </div>
+                        <p class="my-20 ml-5 text-muted">Showing last 5:
+                            <span id="filter-type">all</span>
+                        </p>
+                        <div class="table-responsive mh-three-quarter">
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
+                                {% for expense in expenses %}
+                                    <tr class="expense-row {% if expense.amount_type == 'debit' %}debit{% elif expense.amount_type == 'credit' %}credit{% endif %}">
+                                        <td>{{ loop.index }}</td>
+                                        <td>
+                                            {% if expense.amount_type == "debit" %}
+                                                <span class="debit-amount debit text-danger amount">-{{ expense.amount }}</span>
+                                            {% else %}
+                                                <span class="credit-amount credit text-success amount">+{{ expense.amount }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ expense.description }}</td>
+                                        <td>{{ expense.date }}</td>
+                                        <td>
+                                            {% if expense.amount_type == "credit" %}
+                                                <span class="credit">Credit</span>
+                                            {% else %}
+                                                <span class="debit">Debit</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <form action="{{ url_for('views.delete_expense', expense_id=expense.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this expense?');">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-danger delete-button">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Content wrapper end -->
+
+        </div>
+        <!-- Page wrapper end -->
+
+
+        <!-- Halfmoon JS -->
+        <script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
+        <!-- flash message -->
+        <script>
+            setTimeout(function () {
+                var flashMessage = document.querySelector('.flash-message');
+                if (flashMessage) {
+                    flashMessage.style.display = 'none';
+                }
+            }, 2000);
+        </script>
+        <!-- table logic -->
+        <script>
+            const expenseRows = document.querySelectorAll('.expense-row');
+            const creditCount = document.querySelector('#total-credit-count');
+            const debitCount = document.querySelector('#total-debit-count');
+
+            const allCredits = document.querySelectorAll("debit-amount");
+            console.log(allCredits)
+
+            let totalCreditCount = 0;
+            let totalDebitCount = 0;
+
+            expenseRows.forEach(function (row) {
+                if (row.classList.contains('credit')) {
+                    totalCreditCount += Number(row.cells[1].innerText.replace('-', ''));
+                } else {
+                    totalDebitCount += Number(row.cells[1].innerText.replace('-', ''));
+                }
+            });
+            creditCount.innerHTML = totalCreditCount;
+            debitCount.innerHTML = totalDebitCount;
+
+            function filterExpenses(type) {
+                document.querySelector('#filter-type').innerHTML = type;
+
+                if (type === 'debit') {
+                    expenseRows.forEach(function (row) {
+                        row.style.display = row.classList.contains('debit') ? 'table-row' : 'none';
+                    });
+                } else if (type === 'credit') {
+                    expenseRows.forEach(function (row) {
+                        row.style.display = row.classList.contains('credit') ? 'table-row' : 'none';
+                    });
+                } else if (type === 'all') {
+                    expenseRows.forEach(function (row) {
+                        row.style.display = 'table-row';
+                    });
+                }
+            }
+        </script>
+        <!-- alerts-toast script -->
+        <script>
+            // Toasts danger alert
+            function toast(_title, _message, _type) {
+                halfmoon.initStickyAlert({content: _message, title: _title, alertType: _type, fillType: "filled"});
+            }
+        </script>
+        <!-- amount-normalization -->
+        <script>
+            const amounts = document.querySelectorAll(".amount")
+
+            amounts.forEach(function(amount){
+                amount.innerText = Number(amount.innerText).toLocaleString()
+            })
+        </script>
+
+
+    </body>
+</html>
