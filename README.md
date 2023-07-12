@@ -82,8 +82,8 @@ Contributions are welcome! If you would like to contribute to EXPENZA, please fo
 Please ensure your code adheres to the project's coding conventions and includes appropriate tests.
 
 ## Contributors
-<a href="https://github.com/thatsapanda/expense-app/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=thatsapanda/expense-app" />
+<a href="https://github.com/vivekkushalch/expense-app/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=vivekkushalch/expense-app" />
 </a>
 
 ## License
