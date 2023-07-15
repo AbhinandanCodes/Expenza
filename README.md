@@ -15,7 +15,7 @@ EXPENZA is a web application built with Python Flask that allows users to track 
 
 ## Demo
 
-[Link to the live demo](https://expenza.thatsapanda.repl.co/)
+[Link to the live demo](https://expenza.onrender.com/)
 
 ## Installation
 
