@@ -163,6 +163,7 @@ def dashboard():
     current_balance_dates, balances = get_current_balance_data(3,user_id)
     credit_dates, credits_list = get_credit_data(3,user_id)
     debit_dates, debit_list = get_debit_data(3,user_id)
+    
 
     expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date.desc()).all()
     total_balance = current_balance(current_user)

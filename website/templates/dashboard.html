@@ -282,14 +282,14 @@
                                 {% if current_user.goal == 1.0 %}
                                     <p class="text-danger">Please set goal </p>
                                 {% else %}
-                                <span class="text-secondary font-weight-mediumfont-weight-bold amount" id="total-debit-count"></span>
-                                <p class="text-muted font-size-12 mt-5">Progress: {{ (total_balance / current_user.goal) * 100 }}%</p>
-                                <div
-                                class="progress">
-                                <!-- h-25 = height: 2.5rem (25px) -->
-                                <div class="progress-bar bg-primary progress-bar-animated" role="progressbar" style="width: {{ (total_balance / current_user.goal) * 100 }}%"   aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
-                                <!-- w-three-quarter = width: 75%, rounded-0 = border-radius: 0 -->
-                                 </div>
+                                    <span class="text-secondary">{{current_user.goal}}</span>
+                                    <p class="text-muted font-size-12 mt-5">Progress: {{ (total_balance / current_user.goal) * 100 }}%</p>
+                                    <div
+                                    class="progress">
+                                    <!-- h-25 = height: 2.5rem (25px) -->
+                                    <div class="progress-bar bg-primary progress-bar-animated" role="progressbar" style="width: {{ (total_balance / current_user.goal) * 100 }}%"   aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <!-- w-three-quarter = width: 75%, rounded-0 = border-radius: 0 -->
+                                    </div>
                                 {% endif %}
                             
                             
