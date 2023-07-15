@@ -22,14 +22,18 @@ def signup():
         if user:
             flash_messages.append('Email already exists.')
 
+        if len(password)<6:
+            flash_messages.append('Password must be 6 characters')
+
         if password != confirm_password:
             flash_messages.append('Passwords do not match!')
-
+        
         if confirm_bank_balance != bank_balance:
             flash_messages.append('Bank balance does not match')
 
         if bank_balance <= 0:
             flash_messages.append('Invalid amount!')
+            
 
         if not flash_messages:
             new_user = User(email=email, username=username, bank_balance=bank_balance, password=generate_password_hash(password, method='sha256'))

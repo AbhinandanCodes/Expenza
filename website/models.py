@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100), nullable=False)
     expenses = db.relationship('Expense', backref='user', lazy=True)
     bank_balance = db.Column(db.Float, nullable=False, default=0.0)
-    goal = db.Column(db.Float) 
+    goal = db.Column(db.Float,default=1.0) 
     
 
 class Expense(db.Model):

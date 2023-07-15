@@ -111,20 +111,29 @@
                 color: black;
             }
 
-            .flash-message {
-                position: sticky;
+            .flash-messages {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                list-style-type: none;
+                padding: 0;
                 display: flex;
                 flex-direction: column;
-
-                margin-bottom: 10px;
-                margin-left: auto;
-                margin-right: auto;
-                border-radius: 4px;
+                align-items: center;
                 z-index: 10000000;
-                max-width: 20%;
-
-                background-color: transparent !important;
-                overflow: hidden;
+                width:90vw;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            
+            .flash-message {
+                margin: 5px 0;
+                padding: 10px;
+                border-radius: 5px;
+                color: #fff;
+                width: 250px;
+                text-align: center;
             }
 
             .flash-success {
@@ -163,20 +172,20 @@
 
     </head>
     <body class="with-custom-webkit-scrollbars with-custom-css-scrollbars" data-dm-shortcut-enabled="true" data-sidebar-shortcut-enabled="true" data-set-preferred-mode-onload="true">
-        <!-- flash message logic
-                                        {% with messages = get_flashed_messages(with_categories=true) %}
-                                            {% if messages %}
-                                                <ul class="flash-messages">
-                                                    {% for category, message in messages %}
-                                                        {% if category == 'error' %}
-                                                            <li class=" flash-message flash-error">{{ message }}</li>
-                                                        {% elif category == 'success' %}
-                                                            <li class="flash-message flash-success">{{ message }}</li>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        {% endwith %} -->
+        <!-- flash message logic-->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flash-messages">
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                <li class=" flash-message flash-error">{{ message }}</li>
+                            {% elif category == 'success' %}
+                                <li class="flash-message flash-success">{{ message }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %} 
         <!-- loader -->
         <img
         src="{{ url_for('static', filename='logo/logo_login.jpg') }}" id="loader" class="center" alt="loader" srcset=""> <!-- Page wrapper start -->
@@ -270,24 +279,40 @@
                         <div class="form-container">
                             <h1 class="card-title">Set Goal</h1>
                             <h6 class="">Current Balance (₹): <span class="text-primary amount">{{ current_balance }}</span></h6>
+                            {% if current_user.goal == 1.0%}
+                            
+                            <h6 class="">Current Goal (₹): <span class="text-danger">None</span></h6>
+                            <h6 class="">Difference (₹): <span class="text-danger">None</span></h6>
+                            {% elif (goal-current_balance)<=0 %}
+                            <h6 class="">Current Goal (₹): <span class="text-success">Goal Reached!</span></h6>
+                            <h6 class="">Difference (₹): <span class="text-success">Goal Reached!</span></h6>
+                            {% else %}
                             <h6 class="">Current Goal (₹): <span class="text-success amount">{{ goal }}</span></h6>
                             <h6 class="">Difference (₹): <span class="text-danger amount">{{ goal - current_balance }}</span></h6>
+                            <div class="sidebar-divider mt-20"></div>
+                            <p class="text-muted">Save:(₹){{(goal-current_balance)//7}} per week to reach the goal</p>
+                            <p class="text-muted">Save:(₹){{(goal-current_balance)//30}} per month to reach the goal</p>
+                            {% endif%}
+                            <div class="sidebar-divider mt-20"></div>
                             <div class="">
                                 <form action="/goal" method="POST">
                                     <div class="input-group">
                                         <input type="number" class="form-control" placeholder="goal amount should be >> {{ current_balance }}" id="goal" name="goal">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" value="Save">Update</button>
+                                            <button class="btn btn-primary" type="submit" value="Save">Update</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div class="sidebar-divider mt-20"></div>
-                        <p class="text-muted">Progress: {{ (current_balance / goal) * 100 }}%</p>
-                        <div class="goal-container container-fluid">
-                            <canvas id="goal-graph" class="m-auto"></canvas>
-                        </div>
+                        {% if current_user.goal == 1.0 or (goal-current_balance)<=0 %}
+                            <p class="text-danger">Please set new goal greater than current balance </p>
+                        {% else %}
+                            <p class="text-muted">Progress: {{ (current_balance / goal) * 100 }}%</p>
+                            <div class="goal-container container-fluid">
+                                <canvas id="goal-graph" class="m-auto"></canvas>
+                            </div>
+                        {% endif%}
                     </div>
 
                 </div>

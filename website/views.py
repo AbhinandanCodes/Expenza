@@ -116,18 +116,20 @@ def delete_expense(expense_id):
 @login_required
 def adding_expense():
     if request.method == 'POST':
-        flash('h','error')
         amount = request.form.get('amount')
         amount_type = request.form.get('amount_type')
         description = request.form.get('description')
         date = request.form.get('date')
         goal = current_user.goal
         input_date = datetime.strptime(date, '%Y-%m-%d').date()
-        total_balance = current_balance(current_user)-float(amount)
+        if(amount_type=="credit"):
+            total_balance = current_balance(current_user)+float(amount)
+        else:
+            total_balance = current_balance(current_user)-float(amount)
         
         if float(amount)<=0:
             flash('Invalid Amount!','error')
-        if total_balance<0:
+        elif total_balance<0:
             flash('Invalid Amount!','error')
         else:
             new_expense = Expense(amount=amount, description=description, date=input_date,amount_type=amount_type, user_id=current_user.id)
@@ -137,7 +139,7 @@ def adding_expense():
             flash('Expense added successfully!', 'success')
             try:
                 if(float(goal)<=float(goal_check)):
-                    flash('Goal Reached!','success')
+                    flash('Goal Already Reached Update Your Goal!','success')
             except:
                 flash('Expense added successfully!', 'success')  
                 flash('No Goal set yet! pls set a goal for better experience', 'error')      
@@ -207,10 +209,8 @@ def transaction():
 @login_required
 def add_expense():
     expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date.desc()).all()
-    expenses = expenses[-1:-6:-1] 
+    expenses = expenses[:5]
     total_balance = current_balance(current_user)
-    flash('sdihysoihfioshfdhsdifh', 'error')
-    flash('sdihysoihfioshfdhsdifh', 'success')
     return render_template('add_expense.html',expenses=expenses,total_balance=total_balance,current_user=current_user)
 
 @views.route("/goal", methods=['POST','GET'])

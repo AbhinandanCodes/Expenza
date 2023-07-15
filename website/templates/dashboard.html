@@ -122,10 +122,59 @@
             .text-muted {
                 color: #5e5e5e !important;
             }
+            .flash-messages {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                list-style-type: none;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                z-index: 10000000;
+                width:90vw;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            
+            .flash-message {
+                margin: 5px 0;
+                padding: 10px;
+                border-radius: 5px;
+                color: #fff;
+                width: 250px;
+                text-align: center;
+            }
+
+            .flash-success {
+                background-color: #8bc34a !important;
+                color: #fff !important;
+
+            }
+
+            .flash-error {
+                background-color: #f44336 !important;
+                color: #fff !important;
+            }
         </style>
     </head>
     <body
         class="with-custom-webkit-scrollbars with-custom-css-scrollbars" data-dm-shortcut-enabled="true" data-sidebar-shortcut-enabled="true" data-set-preferred-mode-onload="true">
+        <!-- flash message logic-->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            <li class=" flash-message flash-error ">{{ message }}</li>
+                        {% elif category == 'success' %}
+                            <li class="flash-message flash-success ">{{ message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <!-- loader -->
         <img
         src="{{ url_for('static', filename='logo/logo_login.jpg') }}" id="loader" class="center" alt="loader" srcset="">
@@ -230,15 +279,20 @@
 
                         <h6>
                             Current Goal (₹):
-                            <span class="text-secondary font-weight-mediumfont-weight-bold amount" id="total-debit-count">{{ current_user.goal }}</span>
-                            <p class="text-muted font-size-12 mt-5">Progress:
-                                {{ (total_balance / current_user.goal) * 100 }}%</p>
-                            <div
+                                {% if current_user.goal == 1.0 %}
+                                    <p class="text-danger">Please set goal </p>
+                                {% else %}
+                                <span class="text-secondary font-weight-mediumfont-weight-bold amount" id="total-debit-count"></span>
+                                <p class="text-muted font-size-12 mt-5">Progress: {{ (total_balance / current_user.goal) * 100 }}%</p>
+                                <div
                                 class="progress">
                                 <!-- h-25 = height: 2.5rem (25px) -->
                                 <div class="progress-bar bg-primary progress-bar-animated" role="progressbar" style="width: {{ (total_balance / current_user.goal) * 100 }}%"   aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                                 <!-- w-three-quarter = width: 75%, rounded-0 = border-radius: 0 -->
-                            </div>
+                                 </div>
+                                {% endif %}
+                            
+                            
                         </h6>
                     </div>
 
