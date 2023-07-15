@@ -11,7 +11,6 @@ EXPENZA is a web application built with Python Flask that allows users to track 
 - Categories: Users can categorize expenses into different categories for better organization and analysis.
 - Reporting and analytics: EXPENZA provides graphical representations and statistical analysis of expenses, helping users gain insights into their spending patterns.
 - Filtering and search: Users can filter and search expenses based on various criteria, such as date range, category, or description.
-- Notifications: EXPENZA can send notifications or reminders to users regarding upcoming bills or expense targets.
 
 ## Demo
 
