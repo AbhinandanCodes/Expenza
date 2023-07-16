@@ -1,3 +1,3 @@
 readme-assets/
 website/__pycache__/
-instance/
+/instance/database.db
