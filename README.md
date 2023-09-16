@@ -19,7 +19,7 @@ To install and run EXPENZA locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/thatsapanda/expense-app.git
+   git clone https://github.com/AbhinandanCodes/Expenza.git
    ```
 
 2. Navigate to the project directory:
